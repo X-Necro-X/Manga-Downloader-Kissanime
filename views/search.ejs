@@ -1,12 +1,16 @@
-<input type="text" id="userSearch" value="">
-<button id="search">Search</button>
+<html>
 
-<script>
-    $('#search').click(() => {
-        $.post("/search", {
-            userSearch: $("#userSearch").val()
-        }, (data) => {
-            $('body').html(data);
-        });
-    });
-</script>
+<head>
+    <title>
+        Manga Downloader
+    </title>
+</head>
+
+<body>
+    <form action="/search" method="POST">
+        <input type="text" name="userSearch">
+        <button type="submit">Search</button>
+    </form>
+</body>
+
+</html>

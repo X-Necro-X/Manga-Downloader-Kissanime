@@ -1,0 +1,16 @@
+<html>
+
+<head>
+    <title>
+        Manga Downloader
+    </title>
+</head>
+
+<body>
+    <% for( var i = 1; i < result.length; i+=2) { %>
+    <a href="/choose/<%= i-1 %>"><%= result[i] %></a>
+    <br />
+    <% } %>
+</body>
+
+</html>

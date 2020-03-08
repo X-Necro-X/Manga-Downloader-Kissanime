@@ -1,16 +1,16 @@
-<% for( var i = 1; i < result.length; i+=2) { %>
-<a style="cursor: pointer;"><%= result[i] %></a>
-<br />
-<% } %>
+<html>
 
-<script>
-    $('a').click(() => {
-        console.log($('a').index(this));
+<head>
+    <title>
+        Manga Downloader
+    </title>
+</head>
 
-        // $.post("/select", {
-        //     userSelect: $(this).index()
-        // }, (data) => {
-        //     $('body').html(data);
-        // });
-    });
-</script>
+<body>
+    <% for( var i = 1; i < result.length; i+=2) { %>
+    <a href="/select/<%= i-1 %>"><%= result[i] %></a>
+    <br />
+    <% } %>
+</body>
+
+</html>

@@ -15,15 +15,15 @@ app.use(bodyParser.urlencoded({
 }));
 var browser = {},
     page = {},
-    content_search = [];
+    content_search = [],
+    content_choose = [],
+    content_read = [];
 
 // functions
 
 async function starter() {
 
-    browser = await puppeteer.launch({
-        headless: false
-    });
+    browser = await puppeteer.launch();
     page = await browser.newPage();
     await page.goto('https://kissmanga.com/', {
         timeout: 100000
@@ -63,7 +63,24 @@ async function selecter(us) {
     await page.goto('https://kissmanga.com/' + content_search[us], {
         waitUntil: "domcontentloaded"
     });
+    const $ = cheerio.load(await page.content());
+    content_choose = $('td>a').map(function () {
+        return [$(this).attr('href'), $(this).text()];
+    }).get();
+    return content_choose;
 
+}
+
+async function chooser(uc) {
+
+    await page.goto('https://kissmanga.com/' + content_choose[uc], {
+        waitUntil: "domcontentloaded"
+    });
+    const $ = cheerio.load(await page.content());
+    content_read = $('p>img').map(function () {
+        return $(this).attr('src');
+    }).get();
+    return content_read;
 
 }
 
@@ -87,6 +104,12 @@ app.post('/search', async (req, res) => {
 app.get('/select/:selection', async (req, res) => {
     res.render('choose', {
         result: await selecter(req.params.selection)
+    });
+});
+
+app.get('/choose/:choice', async (req, res) => {
+    res.render('read', {
+        result: await chooser(req.params.choice)
     });
 });
 

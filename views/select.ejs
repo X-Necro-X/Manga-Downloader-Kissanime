@@ -1,0 +1,16 @@
+<% for( var i = 1; i < result.length; i+=2) { %>
+<a style="cursor: pointer;"><%= result[i] %></a>
+<br />
+<% } %>
+
+<script>
+    $('a').click(() => {
+        console.log($('a').index(this));
+
+        // $.post("/select", {
+        //     userSelect: $(this).index()
+        // }, (data) => {
+        //     $('body').html(data);
+        // });
+    });
+</script>

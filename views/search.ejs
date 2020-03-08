@@ -1,0 +1,12 @@
+<input type="text" id="userSearch" value="">
+<button id="search">Search</button>
+
+<script>
+    $('#search').click(() => {
+        $.post("/search", {
+            userSearch: $("#userSearch").val()
+        }, (data) => {
+            $('body').html(data);
+        });
+    });
+</script>

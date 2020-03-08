@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const express = require('express');
 const bodyParser = require('body-parser');
-const ejs = require("ejs");
+const ejs = require('ejs');
 
 // settings
 
@@ -63,7 +63,7 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.post('/home', async (req, res) => {
+app.get('/home', async (req, res) => {
     await starter();
     res.render('search');
 });
@@ -74,8 +74,8 @@ app.post('/search', async (req, res) => {
     });
 });
 
-app.post('/select', (req, res) => {
-    res.send(req.body.userSelect);
+app.get('/select/:choice', (req, res) => {
+    res.send(req.params.choice);
 });
 
 app.listen(3000);

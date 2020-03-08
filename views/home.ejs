@@ -1,25 +1,13 @@
 <html>
 
 <head>
-
     <title>
         Manga Downloader
     </title>
-    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 
 <body>
-
-    <button id="home">Home</button>
-
-    <script>
-        $('#home').click(() => {
-            $.post('/home', (data) => {
-                $('body').html(data);
-            });
-        });
-    </script>
-
+    <a href="/home">Home</a>
 </body>
 
 </html>

@@ -1,0 +1,40 @@
+{
+  "name": "manga-downloader",
+  "version": "1.0.0",
+  "description": "Download every manga present on kissmanga.com",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cheerio": "^1.0.0-rc.3",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.2",
+    "iconv-lite": "^0.4.24",
+    "puppeteer": "^2.1.1",
+    "range-parser": "^1.2.1",
+    "safe-buffer": "^5.2.0",
+    "safer-buffer": "^2.1.2",
+    "send": "^0.17.1",
+    "setprototypeof": "^1.1.1",
+    "statuses": "^1.5.0",
+    "string_decoder": "^1.3.0",
+    "toidentifier": "^1.0.0",
+    "typedarray": "^0.0.6",
+    "unpipe": "^1.0.0",
+    "util-deprecate": "^1.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Necro-Mancer-94540/Manga-Downloader.git"
+  },
+  "author": "Necro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Necro-Mancer-94540/Manga-Downloader/issues"
+  },
+  "homepage": "https://github.com/Necro-Mancer-94540/Manga-Downloader#readme"
+}

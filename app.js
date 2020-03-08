@@ -14,7 +14,8 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 var browser = {},
-    page = {};
+    page = {},
+    content_search = [];
 
 // functions
 
@@ -45,15 +46,24 @@ async function searcher(us) {
     }
     await page.waitFor('td');
     const $ = cheerio.load(await page.content());
-    var content = $('td>a').map(function () {
+    content_search = $('td>a').map(function () {
         return [$(this).attr('href'), $(this).text()];
     }).get();
-    content = content.filter(cleaner);
+    content_search = content_search.filter(cleaner);
 
     function cleaner(v, i, a) {
         return i % 4 == 0 || i % 4 == 1;
     }
-    return content;
+    return content_search;
+
+}
+
+async function selecter(us) {
+
+    await page.goto('https://kissmanga.com/' + content_search[us], {
+        waitUntil: "domcontentloaded"
+    });
+
 
 }
 
@@ -74,8 +84,10 @@ app.post('/search', async (req, res) => {
     });
 });
 
-app.get('/select/:choice', (req, res) => {
-    res.send(req.params.choice);
+app.get('/select/:selection', async (req, res) => {
+    res.render('choose', {
+        result: await selecter(req.params.selection)
+    });
 });
 
 app.listen(3000);

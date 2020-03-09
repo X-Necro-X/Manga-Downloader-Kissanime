@@ -49,8 +49,6 @@ async function searcher(us) {
     content_search = $('td').map(function () {
         return [$(this).find('a').attr('href'), $(this).find('a').text()];
     }).get();
-    console.log(content_search);
-    
     content_search = content_search.filter(cleaner);
 
     function cleaner(v, i, a) {
@@ -121,7 +119,7 @@ app.get('/download', (req, res) => {
     });
 });
 
-app.post('/download/selected', (req, res)=>{
+app.post('/download/selected', (req, res) => {
     res.send("done");
 });
 

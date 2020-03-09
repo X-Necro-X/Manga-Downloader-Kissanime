@@ -115,4 +115,5 @@ app.get('/choose/:choice', async (req, res) => {
 
 app.listen(3000);
 
+// https://cors-anywhere.herokuapp.com/
 // await browser.close();

@@ -1,0 +1,19 @@
+<html>
+
+<head>
+    <title>
+        Manga Downloader
+    </title>
+</head>
+
+<body>
+    <form action="/download/selected" method="post">
+        <% for( var i = 1; i < result.length; i+=2) { %>
+        <input type="checkbox" value="<%= result[i] %>" />
+        <br />
+        <% } %>
+        <input type="submit" value="Download">
+    </form>
+</body>
+
+</html>

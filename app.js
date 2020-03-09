@@ -46,9 +46,11 @@ async function searcher(us) {
     }
     await page.waitFor('td');
     const $ = cheerio.load(await page.content());
-    content_search = $('td>a').map(function () {
-        return [$(this).attr('href'), $(this).text()];
+    content_search = $('td').map(function () {
+        return [$(this).find('a').attr('href'), $(this).find('a').text()];
     }).get();
+    console.log(content_search);
+    
     content_search = content_search.filter(cleaner);
 
     function cleaner(v, i, a) {
@@ -111,6 +113,16 @@ app.get('/choose/:choice', async (req, res) => {
     res.render('read', {
         result: await chooser(req.params.choice)
     });
+});
+
+app.get('/download', (req, res) => {
+    res.render('download', {
+        result: content_choose
+    });
+});
+
+app.post('/download/selected', (req, res)=>{
+    res.send("done");
 });
 
 app.listen(3000);

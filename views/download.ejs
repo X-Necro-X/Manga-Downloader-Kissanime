@@ -9,7 +9,7 @@
 <body>
     <form action="/download/selected" method="post">
         <% for( var i = 1; i < result.length; i+=2) { %>
-        <input type="checkbox" value="<%= result[i] %>" />
+        <input type="checkbox" /><%= result[i] %>
         <br />
         <% } %>
         <input type="submit" value="Download">

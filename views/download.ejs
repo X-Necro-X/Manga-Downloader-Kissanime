@@ -8,10 +8,15 @@
 
 <body>
     <form action="/download/selected" method="post">
-        <% for( var i = 1; i < result.length; i+=2) { %>
-        <input type="checkbox" /><%= result[i] %>
-        <br />
-        <% } %>
+        <ul>
+            <% for( var i = 1; i < result.length; i+=2) { %>
+            <label>
+                <li>
+                    <input type="checkbox" name="<%= i %>" value="<%= result[i] %>" /><%= result[i] %>
+                </li>
+            </label>
+            <% } %>
+        </ul>
         <input type="submit" value="Download">
     </form>
 </body>

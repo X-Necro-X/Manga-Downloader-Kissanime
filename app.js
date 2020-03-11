@@ -23,7 +23,9 @@ var browser = {},
 
 async function starter() {
 
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+        headless: false
+    });
     page = await browser.newPage();
     await page.goto('https://kissmanga.com/', {
         timeout: 100000
@@ -84,6 +86,38 @@ async function chooser(uc) {
 
 }
 
+// debug area start ----------------------------------------------------------------------------------------------
+
+app.post('/download/selected', async (req, res) => {
+    n = Object.keys(req.body);
+    
+    k = await n.map(async (val) => {
+        
+        return (await(chooserNew(parseInt(val) - 1)));
+    });
+    res.send(k);
+});
+
+async function chooserNew(uc) {
+
+    await page.goto('https://kissmanga.com/' + content_choose[uc], {
+        waitUntil: "domcontentloaded"
+    });
+
+    const $ = cheerio.load(await page.content());
+    content_read = $('p>img').map(function (key, e) {
+        console.log($(e).attr('src'));
+        
+        return $(e).attr('src');
+    }).get();
+    console.log(content_read);
+    
+    return content_read;
+
+}
+
+// debug area end ------------------------------------------------------------------------------------------------
+
 // routes
 
 app.get('/', (req, res) => {
@@ -117,10 +151,6 @@ app.get('/download', (req, res) => {
     res.render('download', {
         result: content_choose
     });
-});
-
-app.post('/download/selected', (req, res) => {
-    res.send("done");
 });
 
 app.listen(3000);

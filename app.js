@@ -23,9 +23,7 @@ var browser = {},
 
 async function starter() {
 
-    browser = await puppeteer.launch({
-        headless: false
-    });
+    browser = await puppeteer.launch();
     page = await browser.newPage();
     await page.goto('https://kissmanga.com/', {
         timeout: 100000
@@ -40,7 +38,7 @@ async function searcher(us) {
 
     const orgURL = await page.url();
     await page.waitFor('#keyword');
-    await page.type('#keyword', us);
+    await page.evaluate(typed => document.querySelector('#keyword').value = typed, us);
     while (orgURL == await page.url()) {
         await page.bringToFront();
         await page.click('#imgSearch');
@@ -48,8 +46,8 @@ async function searcher(us) {
     }
     await page.waitFor('td');
     const $ = cheerio.load(await page.content());
-    content_search = $('td').map(function () {
-        return [$(this).find('a').attr('href'), $(this).find('a').text()];
+    content_search = $('td').map(function (index, item) {
+        return [$(item).find('a').attr('href'), $(item).find('a').text()];
     }).get();
     content_search = content_search.filter(cleaner);
 
@@ -66,8 +64,8 @@ async function selecter(us) {
         waitUntil: "domcontentloaded"
     });
     const $ = cheerio.load(await page.content());
-    content_choose = $('td>a').map(function () {
-        return [$(this).attr('href'), $(this).text()];
+    content_choose = $('td>a').map(function (index, item) {
+        return [$(item).attr('href'), $(item).text()];
     }).get();
     return content_choose;
 
@@ -79,44 +77,20 @@ async function chooser(uc) {
         waitUntil: "domcontentloaded"
     });
     const $ = cheerio.load(await page.content());
-    content_read = $('p>img').map(function () {
-        return $(this).attr('src');
+    content_read = $('p>img').map(function (index, item) {
+        return $(item).attr('src');
     }).get();
     return content_read;
 
 }
 
-// debug area start ----------------------------------------------------------------------------------------------
-
-app.post('/download/selected', async (req, res) => {
-    n = Object.keys(req.body);
-    
-    k = await n.map(async (val) => {
-        
-        return (await(chooserNew(parseInt(val) - 1)));
-    });
-    res.send(k);
-});
-
-async function chooserNew(uc) {
-
-    await page.goto('https://kissmanga.com/' + content_choose[uc], {
-        waitUntil: "domcontentloaded"
-    });
-
-    const $ = cheerio.load(await page.content());
-    content_read = $('p>img').map(function (key, e) {
-        console.log($(e).attr('src'));
-        
-        return $(e).attr('src');
-    }).get();
-    console.log(content_read);
-    
-    return content_read;
-
+async function extractor(keys) {
+    var result = [];
+    for (var i = 0; i < keys.length; i++) {
+        result.push(await chooser(keys[i] - 1));
+    }
+    return result;
 }
-
-// debug area end ------------------------------------------------------------------------------------------------
 
 // routes
 
@@ -150,6 +124,12 @@ app.get('/choose/:choice', async (req, res) => {
 app.get('/download', (req, res) => {
     res.render('download', {
         result: content_choose
+    });
+});
+
+app.post('/download/selected', async (req, res) => {
+    res.render('downloading', {
+        result: await extractor(Object.keys(req.body))
     });
 });
 

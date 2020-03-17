@@ -79,8 +79,6 @@ async function chooser(uc) {
     await page.goto('https://kissmanga.com/' + content_choose[uc], {
         waitUntil: "domcontentloaded"
     });
-    console.log(content_choose[uc]);
-
     await page.waitFor('p>img');
     const $ = cheerio.load(await page.content());
     content_read = $('p>img').map(function (index, item) {

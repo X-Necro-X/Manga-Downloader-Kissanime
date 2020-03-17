@@ -21,6 +21,7 @@
     "toidentifier": "^1.0.0",
     "typedarray": "^0.0.6",
     "unpipe": "^1.0.0",
+    "util": "^0.12.2",
     "util-deprecate": "^1.0.2"
   },
   "devDependencies": {},

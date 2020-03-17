@@ -1,3 +1,4 @@
+"use strict";
 // imports
 
 const puppeteer = require('puppeteer');
@@ -5,6 +6,7 @@ const cheerio = require('cheerio');
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
+const sleep = require('util').promisify(setTimeout);
 
 // settings
 
@@ -23,7 +25,9 @@ var browser = {},
 
 async function starter() {
 
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+        headless: false
+    });
     page = await browser.newPage();
     await page.goto('https://kissmanga.com/', {
         timeout: 100000
@@ -76,6 +80,7 @@ async function chooser(uc) {
     await page.goto('https://kissmanga.com/' + content_choose[uc], {
         waitUntil: "domcontentloaded"
     });
+    await page.waitFor('p>img');
     const $ = cheerio.load(await page.content());
     content_read = $('p>img').map(function (index, item) {
         return $(item).attr('src');
@@ -85,11 +90,13 @@ async function chooser(uc) {
 }
 
 async function extractor(keys) {
+
     var result = [];
     for (var i = 0; i < keys.length; i++) {
         result.push(await chooser(keys[i] - 1));
     }
     return result;
+
 }
 
 // routes

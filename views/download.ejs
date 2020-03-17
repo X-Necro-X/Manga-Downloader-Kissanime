@@ -9,16 +9,29 @@
 <body>
     <form action="/download/selected" method="post">
         <ul>
+            <label>
+                <li>
+                    <input type="checkbox" onclick="toggle(this)" />Select All
+                </li>
+            </label>
             <% for( var i = 1; i < result.length; i+=2) { %>
             <label>
                 <li>
-                    <input type="checkbox" name="<%= i %>" value="<%= result[i] %>" /><%= result[i] %>
+                    <input type="checkbox" class="checkbox" name="<%= i %>" value="<%= result[i] %>" /><%= result[i] %>
                 </li>
             </label>
             <% } %>
         </ul>
         <input type="submit" value="Download">
     </form>
+    <script>
+        function toggle(source) {
+            checkboxes = document.getElementsByClassName('checkbox');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
 </body>
 
 </html>

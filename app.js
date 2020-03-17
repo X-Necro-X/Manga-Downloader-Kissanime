@@ -20,14 +20,13 @@ var browser = {},
     content_search = [],
     content_choose = [],
     content_read = [];
+app.use(express.static('public'));
 
 // functions
 
 async function starter() {
 
-    browser = await puppeteer.launch({
-        headless: false
-    });
+    browser = await puppeteer.launch();
     page = await browser.newPage();
     await page.goto('https://kissmanga.com/', {
         timeout: 100000
@@ -80,6 +79,8 @@ async function chooser(uc) {
     await page.goto('https://kissmanga.com/' + content_choose[uc], {
         waitUntil: "domcontentloaded"
     });
+    console.log(content_choose[uc]);
+
     await page.waitFor('p>img');
     const $ = cheerio.load(await page.content());
     content_read = $('p>img').map(function (index, item) {
@@ -94,6 +95,7 @@ async function extractor(keys) {
     var result = [];
     for (var i = 0; i < keys.length; i++) {
         result.push(await chooser(keys[i] - 1));
+        await sleep(1000);
     }
     return result;
 

@@ -1,33 +1,3 @@
-$("html").click(function () {
-
-  var zip = new JSZip();
-  var url = $("#hola").data("url");
-  zip.file("example.jpg", urlToPromise(url), {
-    binary: true
-  });
-  zip.generateAsync({
-      type: "blob"
-    })
-    .then(function callback(blob) {
-      saveAs(blob, "example.zip");
-    });
-
-});
-
-function urlToPromise(url) {
-
-  return new Promise(function (resolve, reject) {
-    JSZipUtils.getBinaryContent(url, function (err, data) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-
-}
-
 /*!
 
 JSZip v3.1.5 - A JavaScript class for generating and reading zip files

@@ -1,17 +1,18 @@
-"use strict";
+// start
+
+'use strict';
+
 // imports
 
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 const express = require('express');
 const bodyParser = require('body-parser');
-const ejs = require('ejs');
 const sleep = require('util').promisify(setTimeout);
 
 // settings
 
 const app = express();
-app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -32,8 +33,9 @@ async function starter() {
         timeout: 100000
     });
     await page.waitForNavigation({
-        waitUntil: "domcontentloaded"
+        waitUntil: 'domcontentloaded'
     });
+    return ('Connection Established!');
 
 }
 
@@ -64,7 +66,7 @@ async function searcher(us) {
 async function selecter(us) {
 
     await page.goto('https://kissmanga.com/' + content_search[us], {
-        waitUntil: "domcontentloaded"
+        waitUntil: 'domcontentloaded'
     });
     const $ = cheerio.load(await page.content());
     content_choose = $('td>a').map(function (index, item) {
@@ -77,7 +79,7 @@ async function selecter(us) {
 async function chooser(uc) {
 
     await page.goto('https://kissmanga.com/' + content_choose[uc], {
-        waitUntil: "domcontentloaded"
+        waitUntil: 'domcontentloaded'
     });
     await page.waitFor('p>img');
     const $ = cheerio.load(await page.content());
@@ -99,48 +101,43 @@ async function extractor(keys) {
 
 }
 
+async function ender() {
+
+    await browser.close();
+    return ('Disconnected!');
+
+}
+
 // routes
 
 app.get('/', (req, res) => {
-    res.render('home');
+    res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/home', async (req, res) => {
-    await starter();
-    res.render('search');
+app.post('/connect', async (req, res) => {
+    res.send(await starter());
 });
 
 app.post('/search', async (req, res) => {
-    res.render('select', {
-        result: await searcher(req.body.userSearch)
-    });
+    res.send(await searcher(req.body.userSearch));
 });
 
-app.get('/select/:selection', async (req, res) => {
-    res.render('choose', {
-        result: await selecter(req.params.selection)
-    });
+app.post('/select/:selection', async (req, res) => {
+    res.send(await selecter(req.params.selection));
 });
 
-app.get('/choose/:choice', async (req, res) => {
-    res.render('read', {
-        result: await chooser(req.params.choice)
-    });
+app.post('/read/:choice', async (req, res) => {
+    res.send(await chooser(req.params.choice));
 });
 
-app.get('/download', (req, res) => {
-    res.render('download', {
-        result: content_choose
-    });
+app.post('/download', async (req, res) => {
+    res.send(await extractor(Object.keys(req.body)));
 });
 
-app.post('/download/selected', async (req, res) => {
-    res.render('downloading', {
-        result: await extractor(Object.keys(req.body))
-    });
+app.post('/disconnect', async (req, res) => {
+    res.send(await ender());
 });
 
 app.listen(3000);
 
-// https://cors-anywhere.herokuapp.com/
-// await browser.close();
+// end

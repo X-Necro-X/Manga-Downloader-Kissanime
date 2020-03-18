@@ -122,8 +122,8 @@ app.post('/search', async (req, res) => {
     res.send(await searcher(req.body.userSearch));
 });
 
-app.post('/select/:selection', async (req, res) => {
-    res.send(await selecter(req.params.selection));
+app.post('/select', async (req, res) => {
+    res.send(await selecter(req.body.selection));
 });
 
 app.post('/read/:choice', async (req, res) => {

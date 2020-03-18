@@ -1,28 +1,43 @@
-html,
 body {
-    min-height: 100%;
-    height: 100%;
-}
-
-body {
-    background: #000000;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    min-height: 100vh;
 }
 
-input,div{
+header {
+    width: 100%;
+}
+
+hr {
+    border-top: 2.5px solid #00ff00;
+}
+
+main {}
+
+div {
     display: none;
 }
 
-input {
-    border: none;
-    background: transparent;
-    color: #00ff00;
-    font-size: 25px;
-    font-family: monospace;
+input {}
+
+p {
+    margin: 0;
 }
 
-input:focus{
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+a {}
+
+* {
+    overflow: hidden;
     outline: none;
+    border: none;
+    background: #000000;
+    color: #00ff00;
+    font-size: 15px;
+    font-family: 'Share Tech Mono';
 }

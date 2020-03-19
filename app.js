@@ -86,7 +86,7 @@ async function chooser(uc) {
     content_read = $('p>img').map(function (index, item) {
         return $(item).attr('src');
     }).get();
-    return content_read;
+    return [content_choose[++uc], content_read];
 
 }
 
@@ -126,12 +126,12 @@ app.post('/select', async (req, res) => {
     res.send(await selecter(req.body.selection));
 });
 
-app.post('/read/:choice', async (req, res) => {
-    res.send(await chooser(req.params.choice));
+app.post('/read', async (req, res) => {
+    res.send(await chooser(req.body.choice));
 });
 
 app.post('/download', async (req, res) => {
-    res.send(await extractor(Object.keys(req.body)));
+    res.send(await extractor(Object.keys(req.body.choice)));
 });
 
 app.post('/disconnect', async (req, res) => {

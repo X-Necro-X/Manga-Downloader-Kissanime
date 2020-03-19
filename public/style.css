@@ -1,7 +1,13 @@
+::-webkit-scrollbar {
+    width: 0px;
+}
+
 body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 header {
@@ -12,32 +18,34 @@ hr {
     border-top: 2.5px solid #00ff00;
 }
 
-main {}
+main {
+    flex: 1 0 auto;
+}
 
 div {
     display: none;
 }
-
-input {}
 
 p {
     margin: 0;
 }
 
 footer {
-    position: absolute;
-    bottom: 0;
+    flex-shrink: 0;
     width: 100%;
 }
 
-a {}
-
 * {
-    overflow: hidden;
     outline: none;
     border: none;
     background: #000000;
     color: #00ff00;
     font-size: 15px;
     font-family: 'Share Tech Mono';
+}
+
+img {
+    display: block;
+    width: 100%;
+    height: auto;
 }

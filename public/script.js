@@ -16218,7 +16218,7 @@ if (typeof module !== "undefined") module.exports = saveAs;
 
 // my.js
 
-var i, cnt;
+var i, cnt, selection;
 
 $(() => {
   $('#connect').show();
@@ -16229,66 +16229,199 @@ $(() => {
   $('#search input').keypress(function (event) {
     search(event);
   });
-  // $('#select input').keypress(function (event) {
-  //   select(event);
-  // });
+  $('#select input').keypress(function (event) {
+    select(event);
+  });
+  $('#read-download input').keypress(function (event) {
+    read_download(event);
+  });
+  $('#read input').keypress(function (event) {
+    read(event);
+  });
+  $('#download input').keypress(function (event) {
+    download(event);
+  });
+  $('#disconnect input').keypress(function (event) {
+    disconnect(event);
+  });
+  $('#select-all').click(function () {
+    select_all(this);
+  });
 });
 
 function connect(event) {
-  if (event.which == 13) {
-    if ($('#connect input').val() == 'connect') {
-      event.preventDefault();
-      $('#connect input').blur();
-      $('#connect p').append('Connecting...<br>');
-      $.post('/connect', (data) => {
-        $('#connect p').append(data);
-        $('#search').show();
-        $('#search input').focus();
-      });
-    }
+  const input = $('#connect input').val().trim().toLowerCase();
+  if (event.which == 13 && input == 'connect') {
+    event.preventDefault();
+    $('#connect input').blur();
+    $('#connect p').append('Connecting...<br>');
+    $.post('/connect', (data) => {
+      $('#connect p').append(data);
+      $('#search').show();
+      $('#search input').focus();
+    });
   }
 }
 
 function search(event) {
-  if (event.which == 13) {
-    if ($('#search input').val().trim() != '') {
-      event.preventDefault();
-      $('#search input').blur();
-      $('#search p').append('Searching...<br>');
-      $.post('/search', {
-        userSearch: $('#search input').val()
-      }, (data) => {
-        var content = "";
-        for (i = 1, cnt = 1; i < data.length; i += 2, cnt++) {
-          content += cnt + ". " + data[i] + "<br>";
-        }
-        $('#search p').append(content);
-        $('#select').show();
-        $('#select input').focus();
-      });
-    }
+  const input = $('#search input').val().trim();
+  if (event.which == 13 && input.length > 1) {
+    event.preventDefault();
+    $('#search input').blur();
+    $('#search p').append('Searching...<br>');
+    $.post('/search', {
+      userSearch: input
+    }, (data) => {
+      var content = "";
+      for (i = 1, cnt = 1; i < data.length; i += 2, cnt++) {
+        content += cnt + ". " + data[i] + "<br>";
+      }
+      $('#search p').append(content);
+      $('#select').show();
+      $('#select input').focus();
+    });
   }
 }
 
-// function select(event) {
-//   if (event.which == 13) {
-//     if (parseInt($('#select input').val()) >= 1 && parseInt($('#select input').val()) <= cnt) {
-//       event.preventDefault();
-//       $('#select input').blur();
-//       $('#select p').append('Selecting...<br>');
-//       $.post('/select', {
-//         selection: $('#select input').val()
-//       }, (data) => {
-//         var content = "";
-//         for (var i = 1, k = 1; i < data.length; i += 2, k++) {
-//           content += k + ". " + data[i] + "<br>";
-//         }
-//         $('#search p').append(content);
-//         $('#select').show();
-//         $('#select input').focus();
-//       });
-//     }
-//   }
-// }
+function select(event) {
+  const input = parseInt($('#select input').val().trim());
+  if (event.which == 13 && input >= 1 && input <= cnt) {
+    event.preventDefault();
+    $('#select input').blur();
+    selection = 2 * input - 2;
+    $('#read-download').show();
+    $('#read-download input').focus();
+  }
+}
 
-// my.js
+function read_download(event) {
+  const input = parseInt($('#read-download input').val().trim());
+  if (event.which == 13 && input >= 1 && input <= 2) {
+    event.preventDefault();
+    $('#read-download input').blur();
+    $('#read-download p').append('Getting chapters...<br>');
+    $.post('/select', {
+      selection: selection
+    }, (data) => {
+      if (input == 1) {
+        var content = "";
+        for (i = data.length - 1, cnt = 1; i > 0; i -= 2, cnt++) {
+          content += cnt + ". " + data[i] + "<br>";
+        }
+        $('#read-download p').append(content);
+        $('#read').show();
+        $('#read input').focus();
+      } else {
+        var content = "<ul> <label> <li> <input type='checkbox' id='select-all' />Select All </li> </label>";
+        for (i = 1; i < data.length; i += 2) {
+          content += "<label> <li> <input type='checkbox' class='checkbox' name='" + i + "' /> + " + data[i] + " + </li> </label>";
+        }
+        content += "</ul>";
+        $('#read-download p').append(content);
+        $('#download').show();
+        $('#download input').focus();
+      }
+    });
+  }
+}
+
+function read(event) {
+  if (event.which == 13 && $('#read input').val().trim().toLowerCase() == 'exit') {
+    $('#read input').blur();
+    $('#read p').append('Exited!');
+    $('#disconnect').show();
+    $('#disconnect input').focus();
+  }
+  const input = parseInt($('#read input').val().trim());
+  if (event.which == 13 && input >= 1 && input <= cnt) {
+    event.preventDefault();
+    $('#read input').val('Opening...');
+    $.post('/read', {
+      choice: 2 * (cnt - input) - 2
+    }, (data) => {
+      var content = "<html> <head> <title>" + data[0] + "</title> <link rel='stylesheet' href='style.css'> </head> <body>";
+      for (i in data[1]) {
+        content += "<img src='" + data[1][i] + "' />";
+      }
+      content += "</body> </html>";
+      window.open().document.write(content);
+      $('#read input').val('');
+    });
+  }
+}
+
+function download(event) {
+  const input = $('#download input').val().trim().toLowerCase();
+  if (event.which == 13 && input == 'download') {
+    event.preventDefault();
+    $('#download input').blur();
+    $('#download p').append('Extracting...<br>');
+    var choice = {};
+    $(":checkbox").each(() => {
+      if ($(this).is(":checked")) {
+        choice[$(this).attr('name')] = '1';
+      }
+    });
+    $.post('/download', {
+      choice: choice
+    }, (data) => {
+      $('#download p').append('Starting download...<br>');
+      downloader(data);
+      $('#download p').append('Downloaded!');
+      $('#disconnect').show();
+      $('#disconnect input').focus();
+    });
+  }
+}
+
+function disconnect(event) {
+  const input = $('#disconnect input').val().trim().toLowerCase();
+  if (event.which == 13 && input == 'disconnect') {
+    event.preventDefault();
+    $('#disconnect input').blur();
+    $('#disconnect p').append('Disconnecting...<br>');
+    $.post('/disconnect', (data) => {
+      $('#disconnect p').append(data);
+    });
+  }
+}
+
+function downloader(links) {
+  const zip = new JSZip();
+  links.forEach((currentChapter, indexChapter) => {
+    var chapter = zip.folder(indexChapter + 1);
+    currentChapter.forEach((currentPage, indexPage) => {
+      var page = currentPage.replace(/.*\//g, "");
+      chapter.file(page, urlToPromise(currentPage), {
+        binary: true
+      });
+    });
+  });
+  zip.generateAsync({
+      type: "blob"
+    })
+    .then(function callback(blob) {
+      saveAs(blob, "manga.zip");
+    });
+
+  function urlToPromise(url) {
+    return new Promise(function (resolve, reject) {
+      JSZipUtils.getBinaryContent("https://cors-anywhere.herokuapp.com/" + url, function (err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+}
+
+function select_all(source) {
+  checkboxes = $('.checkbox');
+  for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+
+// my.js  

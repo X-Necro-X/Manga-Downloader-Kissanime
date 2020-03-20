@@ -16218,11 +16218,15 @@ if (typeof module !== "undefined") module.exports = saveAs;
 
 // my.js
 
-var i, cnt, selection;
+var i, cnt, selection, not_found = 0;
 
 $(() => {
   $('#connect').show();
   $('#connect input').focus();
+  $('#connect input').attr('id', 'present');
+  $(document).on('click', function () {
+    $('#present').focus();
+  });
   $('#connect input').keypress(function (event) {
     connect(event);
   });
@@ -16244,8 +16248,10 @@ $(() => {
   $('#disconnect input').keypress(function (event) {
     disconnect(event);
   });
-  $('#select-all').click(function () {
-    select_all(this);
+  $(document).on('click', "#select-all", function () {
+    $(":checkbox").each(function () {
+      this.checked = $('#select-all').prop('checked');
+    });
   });
 });
 
@@ -16253,12 +16259,14 @@ function connect(event) {
   const input = $('#connect input').val().trim().toLowerCase();
   if (event.which == 13 && input == 'connect') {
     event.preventDefault();
+    $('#connect input').attr('id', '');
     $('#connect input').blur();
     $('#connect p').append('Connecting...<br>');
     $.post('/connect', (data) => {
       $('#connect p').append(data);
       $('#search').show();
       $('#search input').focus();
+      $('#search input').attr('id', 'present');
     });
   }
 }
@@ -16267,11 +16275,15 @@ function search(event) {
   const input = $('#search input').val().trim();
   if (event.which == 13 && input.length > 1) {
     event.preventDefault();
+    $('#search input').attr('id', '');
     $('#search input').blur();
     $('#search p').append('Searching...<br>');
     $.post('/search', {
       userSearch: input
     }, (data) => {
+      if (data[0] == '') {
+        not_found = 1;
+      }
       var content = "";
       for (i = 1, cnt = 1; i < data.length; i += 2, cnt++) {
         content += cnt + ". " + data[i] + "<br>";
@@ -16279,18 +16291,29 @@ function search(event) {
       $('#search p').append(content);
       $('#select').show();
       $('#select input').focus();
+      $('#select input').attr('id', 'present');
     });
   }
 }
 
 function select(event) {
   const input = parseInt($('#select input').val().trim());
-  if (event.which == 13 && input >= 1 && input <= cnt) {
+  if (event.which == 13 && input >= 1 && input < cnt) {
     event.preventDefault();
+    $('#select input').attr('id', '');
     $('#select input').blur();
-    selection = 2 * input - 2;
-    $('#read-download').show();
-    $('#read-download input').focus();
+    if (!not_found) {
+      selection = 2 * input - 2;
+      $('#read-download').show();
+      $('#read-download input').focus();
+      $('#read-download input').attr('id', 'present');
+    } else {
+      not_found = 0;
+      $('#select').hide();
+      $('#search p').html('');
+      $('#search input').focus();
+      $('#search input').attr('id', 'present');
+    }
   }
 }
 
@@ -16298,6 +16321,7 @@ function read_download(event) {
   const input = parseInt($('#read-download input').val().trim());
   if (event.which == 13 && input >= 1 && input <= 2) {
     event.preventDefault();
+    $('#read-download input').attr('id', '');
     $('#read-download input').blur();
     $('#read-download p').append('Getting chapters...<br>');
     $.post('/select', {
@@ -16311,15 +16335,16 @@ function read_download(event) {
         $('#read-download p').append(content);
         $('#read').show();
         $('#read input').focus();
+        $('#read input').attr('id', 'present');
       } else {
-        var content = "<ul> <label> <li> <input type='checkbox' id='select-all' />Select All </li> </label>";
-        for (i = 1; i < data.length; i += 2) {
-          content += "<label> <li> <input type='checkbox' class='checkbox' name='" + i + "' /> + " + data[i] + " + </li> </label>";
+        var content = "<label> <input type='checkbox' id='select-all' />Select All </label> <br>";
+        for (i = data.length - 1; i > 0; i -= 2) {
+          content += "<label> <input type='checkbox' class='checkbox' name='" + i + "' /> " + data[i] + " </label> <br>";
         }
-        content += "</ul>";
         $('#read-download p').append(content);
         $('#download').show();
         $('#download input').focus();
+        $('#download input').attr('id', 'present');
       }
     });
   }
@@ -16327,14 +16352,17 @@ function read_download(event) {
 
 function read(event) {
   if (event.which == 13 && $('#read input').val().trim().toLowerCase() == 'exit') {
+    $('#read input').attr('id', '');
     $('#read input').blur();
     $('#read p').append('Exited!');
     $('#disconnect').show();
     $('#disconnect input').focus();
+    $('#disconnect input').attr('id', 'present');
   }
   const input = parseInt($('#read input').val().trim());
-  if (event.which == 13 && input >= 1 && input <= cnt) {
+  if (event.which == 13 && input >= 1 && input < cnt) {
     event.preventDefault();
+    $('#read input').blur();
     $('#read input').val('Opening...');
     $.post('/read', {
       choice: 2 * (cnt - input) - 2
@@ -16346,6 +16374,7 @@ function read(event) {
       content += "</body> </html>";
       window.open().document.write(content);
       $('#read input').val('');
+      $('#read input').focus();
     });
   }
 }
@@ -16354,22 +16383,18 @@ function download(event) {
   const input = $('#download input').val().trim().toLowerCase();
   if (event.which == 13 && input == 'download') {
     event.preventDefault();
+    $('#download input').attr('id', '');
     $('#download input').blur();
     $('#download p').append('Extracting...<br>');
-    var choice = {};
-    $(":checkbox").each(() => {
-      if ($(this).is(":checked")) {
-        choice[$(this).attr('name')] = '1';
+    var choices = {};
+    $(":checkbox").each(function () {
+      if ($(this).is(":checked") && $(this).attr('id') != 'select-all') {
+        choices[$(this).attr('name')] = '1';
       }
     });
-    $.post('/download', {
-      choice: choice
-    }, (data) => {
+    $.post('/download', choices, (data) => {
       $('#download p').append('Starting download...<br>');
       downloader(data);
-      $('#download p').append('Downloaded!');
-      $('#disconnect').show();
-      $('#disconnect input').focus();
     });
   }
 }
@@ -16378,6 +16403,7 @@ function disconnect(event) {
   const input = $('#disconnect input').val().trim().toLowerCase();
   if (event.which == 13 && input == 'disconnect') {
     event.preventDefault();
+    $('#disconnect input').attr('id', '');
     $('#disconnect input').blur();
     $('#disconnect p').append('Disconnecting...<br>');
     $.post('/disconnect', (data) => {
@@ -16388,11 +16414,11 @@ function disconnect(event) {
 
 function downloader(links) {
   const zip = new JSZip();
-  links.forEach((currentChapter, indexChapter) => {
-    var chapter = zip.folder(indexChapter + 1);
-    currentChapter.forEach((currentPage, indexPage) => {
-      var page = currentPage.replace(/.*\//g, "");
-      chapter.file(page, urlToPromise(currentPage), {
+  links.forEach((currentChapter) => {
+    var chapter = zip.folder(currentChapter[0]);
+    currentChapter[1].forEach((currentPage, index) => {
+      var extension = currentPage.substring(currentPage.lastIndexOf('.'));
+      chapter.file((index + 1) + extension, urlToPromise(currentPage), {
         binary: true
       });
     });
@@ -16402,6 +16428,10 @@ function downloader(links) {
     })
     .then(function callback(blob) {
       saveAs(blob, "manga.zip");
+      $('#download p').append('Downloaded!');
+      $('#disconnect').show();
+      $('#disconnect input').focus();
+      $('#disconnect input').attr('id', 'present');
     });
 
   function urlToPromise(url) {
@@ -16417,11 +16447,4 @@ function downloader(links) {
   }
 }
 
-function select_all(source) {
-  checkboxes = $('.checkbox');
-  for (var i = 0; i < checkboxes.length; i++) {
-    checkboxes[i].checked = source.checked;
-  }
-}
-
-// my.js  
+// my.js

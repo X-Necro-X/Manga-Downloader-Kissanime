@@ -33,6 +33,7 @@ async function starter() {
         timeout: 100000
     });
     await page.waitForNavigation({
+        timeout: 100000,
         waitUntil: 'domcontentloaded'
     });
     return ('Connection Established!');
@@ -49,7 +50,11 @@ async function searcher(us) {
         await page.click('#imgSearch');
         await page.bringToFront();
     }
-    await page.waitFor('td');
+    try {
+        await page.waitFor('td');
+    } catch (err) {
+        return ['', 'Not Found... Search Again'];
+    }
     const $ = cheerio.load(await page.content());
     content_search = $('td').map(function (index, item) {
         return [$(item).find('a').attr('href'), $(item).find('a').text()];
@@ -86,7 +91,8 @@ async function chooser(uc) {
     content_read = $('p>img').map(function (index, item) {
         return $(item).attr('src');
     }).get();
-    return [content_choose[++uc], content_read];
+    console.log(content_choose[++uc]);
+    return [content_choose[uc], content_read];
 
 }
 
@@ -131,7 +137,7 @@ app.post('/read', async (req, res) => {
 });
 
 app.post('/download', async (req, res) => {
-    res.send(await extractor(Object.keys(req.body.choice)));
+    res.send(await extractor(Object.keys(req.body)));
 });
 
 app.post('/disconnect', async (req, res) => {

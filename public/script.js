@@ -16335,9 +16335,9 @@ function read_download(event) {
         $('#read input').focus();
         $('#read input').attr('id', 'present');
       } else {
-        var content = "<label> <input type='checkbox' id='select-all' />Select All </label> <br>";
+        var content = "<div class='box'> <input type='checkbox' id='select-all' /> <span class='check'></span> <label for='select-all'> Select All </label> </div>";
         for (i = data.length - 1; i > 0; i -= 2) {
-          content += "<label> <input type='checkbox' class='checkbox' name='" + i + "' /> " + data[i] + " </label> <br>";
+          content += "<div class='box'> <input type='checkbox' class='checkbox' id='" + i + "' name='" + i + "' /> <span class='check'></span> <label for='" + i + "'> " + data[i] + " </label> </div>";
         }
         $('#read-download p').append(content);
         $('#download').show();

@@ -16308,11 +16308,9 @@ function select(event) {
       $('#read-download input').focus();
       $('#read-download input').attr('id', 'present');
     } else {
-      not_found = 0;
-      $('#select').hide();
-      $('#search p').html('');
-      $('#search input').focus();
-      $('#search input').attr('id', 'present');
+      $('#disconnect').show();
+      $('#disconnect input').focus();
+      $('#disconnect input').attr('id', 'present');
     }
   }
 }

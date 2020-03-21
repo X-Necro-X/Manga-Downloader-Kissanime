@@ -53,7 +53,7 @@ async function searcher(us) {
     try {
         await page.waitFor('td');
     } catch (err) {
-        return ['', 'Not Found... Search Again'];
+        return ['', 'Not Found... Disconnect and try again'];
     }
     const $ = cheerio.load(await page.content());
     content_search = $('td').map(function (index, item) {

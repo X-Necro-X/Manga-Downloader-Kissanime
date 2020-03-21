@@ -16393,7 +16393,7 @@ function download(event) {
       }
     });
     $.post('/download', choices, (data) => {
-      $('#download p').append('Starting download...<br>');
+      $('#download p').append('Downloading...<br>');
       downloader(data);
     });
   }
@@ -16436,7 +16436,7 @@ function downloader(links) {
 
   function urlToPromise(url) {
     return new Promise(function (resolve, reject) {
-      JSZipUtils.getBinaryContent("https://cors-anywhere.herokuapp.com/" + url, function (err, data) {
+      JSZipUtils.getBinaryContent("http://localhost:8080/" + url, function (err, data) {
         if (err) {
           reject(err);
         } else {

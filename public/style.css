@@ -76,10 +76,6 @@ img {
     height: 15px;
     border-radius: 2.5px;
     background-color: #000;
-    border: 1.5px solid #0f0;
+    border: .5px solid #0f0;
     transition: all 0.5s cubic-bezier(0, 1.05, 0.72, 1.07);
-}
-
-#select-all{
-    font-weight: bold;
 }

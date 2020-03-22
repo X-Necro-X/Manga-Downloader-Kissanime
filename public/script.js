@@ -16434,7 +16434,7 @@ function downloader(links) {
 
   function urlToPromise(url) {
     return new Promise(function (resolve, reject) {
-      JSZipUtils.getBinaryContent("http://localhost:8080/" + url, function (err, data) {
+      JSZipUtils.getBinaryContent("https://cors-necro.herokuapp.com/" + url, function (err, data) {
         if (err) {
           reject(err);
         } else {

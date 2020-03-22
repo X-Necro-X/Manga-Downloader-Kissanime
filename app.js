@@ -28,7 +28,10 @@ app.use(express.static('public'));
 async function starter() {
 
     browser = await puppeteer.launch({
-        args: ['--no-sandbox']
+        'args': [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+        ]
     });
     page = await browser.newPage();
     await page.goto('https://kissmanga.com/', {

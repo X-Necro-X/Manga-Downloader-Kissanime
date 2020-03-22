@@ -27,8 +27,6 @@ app.use(express.static('public'));
 
 async function starter() {
 
-    console.log("in starter");
-    
     browser = await puppeteer.launch();
     page = await browser.newPage();
     await page.goto('https://kissmanga.com/', {
@@ -119,14 +117,10 @@ async function ender() {
 // routes
 
 app.get('/', (req, res) => {
-    console.log("in get");
-    
     res.sendFile(__dirname + '/public/index.html');
 });
 
 app.post('/connect', async (req, res) => {
-    console.log("in post");
-    
     res.send(await starter());
 });
 

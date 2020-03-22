@@ -28,14 +28,20 @@ app.use(express.static('public'));
 async function starter() {
 
     browser = await puppeteer.launch();
+    console.log("browser launched");
+    
     page = await browser.newPage();
     await page.goto('https://kissmanga.com/', {
         timeout: 100000
     });
+    console.log("here");
+    
     await page.waitForNavigation({
         timeout: 100000,
         waitUntil: 'domcontentloaded'
     });
+    console.log("hola");
+    
     return ('Connection Established!');
 
 }

@@ -5,7 +5,7 @@ The scraped manga can be read or downloaded.
 ## How to use?
 Download or clone the repository:
 ```
-git@github.com:Necro-Mancer-94540/Manga-Downloader.git
+git clone git@github.com:Necro-Mancer-94540/Manga-Downloader.git
 ```
 Install the dependencies using:
 ```

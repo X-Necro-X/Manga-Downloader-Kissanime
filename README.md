@@ -11,11 +11,11 @@ Clone the repository using the given command in the CLI:
 ```
 git clone git@github.com:Necro-Mancer-94540/Manga-Downloader.git
 ```
-Install the dependencies using:
+Install the dependencies:
 ```
 npm install
 ```
-To run the code use:
+Then run the code using:
 ```
 node app.js
 ```

@@ -1,7 +1,19 @@
 # Manga-Downloader
-An app which scrapes manga present on https://kissmanga.com/ !  
-The scraped manga can be read or downloaded.  
-Now, there is no need to watch tons of ads on kissmanga inorder to read manga, just download it and read anywhere, anytime you like.  
+An app which can scrape manga present on [KissManga](https://kissmanga.com/).  
+The scraped manga can be read or downloaded.
 
-## Live Demo
-https://manga-downloader.herokuapp.com/
+## How to use?
+Download or clone the repository:
+```
+git@github.com:Necro-Mancer-94540/Manga-Downloader.git
+```
+Install the dependencies using:
+```
+npm install
+```
+To run the code use:
+```
+node app.js
+```
+Open `http://localhost:3000/` in your browser.  
+Follow the instructions to read or download manga.

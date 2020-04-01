@@ -3,8 +3,8 @@ An app which can scrape manga present on [KissManga](https://kissmanga.com/).
 The scraped manga can be read or downloaded.
 
 ## Requirements
-* **git** (_to clone the repository_)
-* **node.js** (_to run the app_)
+* [**git**](https://git-scm.com/downloads) (_to clone the repository_)
+* [**node.js**](https://nodejs.org/en/download) (_to run the app_)
 
 ## How to use?
 Download or clone the repository using the given command in CLI:

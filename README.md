@@ -7,7 +7,7 @@ The scraped manga can be read or downloaded.
 * **node.js** (_to run the app_)
 
 ## How to use?
-Clone the repository using the given command in the CLI:
+Download or clone the repository using the given command in CLI:
 ```
 git clone git@github.com:Necro-Mancer-94540/Manga-Downloader.git
 ```

@@ -16125,11 +16125,11 @@ function disconnect(event) {
 
 function downloader(links) {
   const zip = new JSZip();
-  links.forEach((currentChapter) => {
+  links.forEach((currentChapter, chapterNumber) => {
     var chapter = zip.folder(currentChapter[0]);
     currentChapter[1].forEach((currentPage, index) => {
       var extension = currentPage.substring(currentPage.lastIndexOf('.'));
-      chapter.file((index + 1) + extension, urlToPromise(currentPage), {
+      chapter.file((index + 1) + extension, urlToPromise(currentPage, chapterNumber + 1, links.length), {
         binary: true
       });
     });
@@ -16145,12 +16145,13 @@ function downloader(links) {
       $('#disconnect input').attr('id', 'present');
     });
 
-  function urlToPromise(url) {
+  function urlToPromise(url, presentChapter, totalChapters) {
     return new Promise(function (resolve, reject) {
       JSZipUtils.getBinaryContent("https://cors-necro.herokuapp.com/" + url, function (err, data) {
         if (err) {
           reject(err);
         } else {
+          console.log(presentChapter + "/" + totalChapters);
           resolve(data);
         }
       });

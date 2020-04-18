@@ -50,6 +50,12 @@ async function searcher(us) {
     const orgURL = await page.url();
     await page.waitFor('#keyword');
     await page.evaluate(typed => document.querySelector('#keyword').value = typed, us);
+    await page.evaluate((sel) => {
+        var elements = document.querySelectorAll(sel);
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].parentNode.removeChild(elements[i]);
+        }
+    }, 'iframe');
     while (orgURL == await page.url()) {
         await page.bringToFront();
         await page.click('#imgSearch');

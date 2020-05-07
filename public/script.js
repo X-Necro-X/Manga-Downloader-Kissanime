@@ -15931,7 +15931,9 @@ if (typeof module !== "undefined") module.exports = saveAs;
 
 // my.js
 
-var i, cnt, selection, not_found = 0;
+var i, cnt, selection, not_found = 0,
+  dlProgress = 0,
+  totalPages = 0;
 
 $(() => {
   $('#connect').show();
@@ -16123,13 +16125,15 @@ function disconnect(event) {
   }
 }
 
-function downloader(links) {
+function downloader(data) {
+  const links = data[0];
+  totalPages = data[1];
   const zip = new JSZip();
-  links.forEach((currentChapter, chapterNumber) => {
-    var chapter = zip.folder(currentChapter[0]);
+  links.forEach((currentChapter) => {
+    var chapter = zip.folder(currentChapter[2] + " - " + currentChapter[0]);
     currentChapter[1].forEach((currentPage, index) => {
       var extension = currentPage.substring(currentPage.lastIndexOf('.'));
-      chapter.file((index + 1) + extension, urlToPromise(currentPage, chapterNumber + 1, links.length), {
+      chapter.file((index + 1) + extension, urlToPromise(currentPage), {
         binary: true
       });
     });
@@ -16139,19 +16143,20 @@ function downloader(links) {
     })
     .then(function callback(blob) {
       saveAs(blob, "manga.zip");
-      $('#download p').append('Downloaded!');
+      $('#download p').append(' Downloaded!');
       $('#disconnect').show();
       $('#disconnect input').focus();
       $('#disconnect input').attr('id', 'present');
     });
 
-  function urlToPromise(url, presentChapter, totalChapters) {
+  function urlToPromise(url) {
     return new Promise(function (resolve, reject) {
       JSZipUtils.getBinaryContent("http://localhost:8080/" + url, function (err, data) {
         if (err) {
           reject(err);
         } else {
-          console.log(presentChapter + "/" + totalChapters);
+          dlProgress++;
+          $('#download p').html((dlProgress / totalPages * 100).toFixed(2) + '%');
           resolve(data);
         }
       });

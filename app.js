@@ -98,18 +98,19 @@ async function chooser(uc) {
         return $(item).attr('src');
     }).get();
     console.log(content_choose[++uc]);
-    return [content_choose[uc], content_read];
+    return [content_choose[uc], content_read, uc];
 
 }
 
 async function extractor(keys) {
 
-    var result = [];
+    var result = [], total = 0;
     for (var i = 0; i < keys.length; i++) {
         result.push(await chooser(keys[i] - 1));
-        await sleep(1000);
+        total += result[i][1].length;
+        await sleep(5000);
     }
-    return result;
+    return [result, total];
 
 }
 

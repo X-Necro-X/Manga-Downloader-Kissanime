@@ -1,4 +1,4 @@
-# Manga-Downloader
+# R.I.P. Kissanime :(
 An app which can scrape manga present on [KissManga](https://kissmanga.com/).  
 The scraped manga can be read or downloaded.
 

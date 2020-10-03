@@ -22,4 +22,4 @@ node app.js
 ```
 Open `http://localhost:3000/` in your browser.  
 _cors-necro should be running at http://localhost:8080/_  
-Follow the instructions to read or download manga.
+Follow the instructions to read oOR download MANGA.

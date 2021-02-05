@@ -1,4 +1,4 @@
-# R.I.P. Kissanime :(
+# R.I.P. Kissmanga (You can use [Manganelo Downloader](https://github.com/X-Necro-X/Manga-Downloader-Manganelo) instead)
 An app which can scrape manga present on [KissManga](https://kissmanga.com/).  
 The scraped manga can be read or downloaded.
 

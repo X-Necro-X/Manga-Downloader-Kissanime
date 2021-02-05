@@ -1,3 +1,6 @@
+// Necro(ネクロ)
+// sidmishra94540@gmail.com
+
 // start
 
 'use strict';
